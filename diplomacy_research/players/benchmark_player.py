@@ -39,12 +39,13 @@ MAX_TIME_BETWEEN_CHECKS = 300
 class DipNetSLPlayer(ModelBasedPlayer):
     """ DipNet SL - NeurIPS 2019 Supervised Learning Benchmark Player """
 
-    def __init__(self, temperature=0.1, use_beam=False, port=9501, name=None, hostname="localhost"):
+    def __init__(self, temperature=0.1, use_beam=False, port=9501, name=None, model_name='player'):
         """ Constructor
             :param temperature: The temperature to apply to the logits.
             :param use_beam: Boolean that indicates that we want to use a beam search.
             :param port: The port to use for the tf serving to query the model.
             :param name: Optional. The name of this player.
+            :param model_name: Name of the model passed through tensorflow serving
         """
         model_url = 'https://f002.backblazeb2.com/file/ppaquette-public/benchmarks/neurips2019-sl_model.zip'
 
@@ -53,11 +54,17 @@ class DipNetSLPlayer(ModelBasedPlayer):
             launch_serving(model_url, port)
 
         # Creating adapter
-        grpc_dataset = GRPCDataset(hostname=hostname,
+        grpc_dataset = GRPCDataset(hostname='localhost',
                                    port=port,
                                    model_name='player',
+                                   model_name=model_name,
                                    signature=sl_neurips2019.PolicyAdapter.get_signature(),
                                    dataset_builder=sl_neurips2019.BaseDatasetBuilder())
+        # grpc_dataset = GRPCDataset(hostname=hostname,
+        #                            port=port,
+        #                            model_name='player',
+        #                            signature=sl_neurips2019.PolicyAdapter.get_signature(),
+        #                            dataset_builder=sl_neurips2019.BaseDatasetBuilder())
         policy_adapter = sl_neurips2019.PolicyAdapter(grpc_dataset)
 
         # Building benchmark model
