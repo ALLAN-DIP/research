@@ -39,7 +39,7 @@ MAX_TIME_BETWEEN_CHECKS = 300
 class DipNetSLPlayer(ModelBasedPlayer):
     """ DipNet SL - NeurIPS 2019 Supervised Learning Benchmark Player """
 
-    def __init__(self, temperature=0.1, use_beam=False, port=9501, name=None, model_name='player'):
+    def __init__(self, temperature=0.1, use_beam=False, port=9501, name=None, tf_model_name='player'):
         """ Constructor
             :param temperature: The temperature to apply to the logits.
             :param use_beam: Boolean that indicates that we want to use a beam search.
@@ -56,7 +56,7 @@ class DipNetSLPlayer(ModelBasedPlayer):
         # Creating adapter
         grpc_dataset = GRPCDataset(hostname='localhost',
                                    port=port,
-                                   model_name=model_name,
+                                   model_name=tf_model_name,
                                    signature=sl_neurips2019.PolicyAdapter.get_signature(),
                                    dataset_builder=sl_neurips2019.BaseDatasetBuilder())
         # grpc_dataset = GRPCDataset(hostname=hostname,
