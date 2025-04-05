@@ -126,6 +126,8 @@ class BaseDatasetBuilder(BasePolicyBuilder):
         # Prev orders state
         prev_orders_state = []
         for phase_proto in reversed(phase_history_proto):
+            if phase_proto.name == "":
+                continue
             if len(prev_orders_state) == NB_PREV_ORDERS:
                 break
             if phase_proto.name[-1] == 'M':

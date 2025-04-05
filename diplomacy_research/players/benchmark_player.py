@@ -23,6 +23,7 @@ import zipfile
 from tornado import gen
 from diplomacy import Game
 from diplomacy_research.models.datasets.grpc_dataset import GRPCDataset, ModelConfig
+from diplomacy_research.models.datasets.session_dataset import SessionDataset
 from diplomacy_research.players.benchmarks import rl_neurips2019, sl_neurips2019
 from diplomacy_research.players.model_based_player import ModelBasedPlayer
 from diplomacy_research.utils.cluster import is_port_opened, kill_processes_using_port
@@ -65,6 +66,27 @@ class DipNetSLPlayer(ModelBasedPlayer):
                                              temperature=temperature,
                                              use_beam=use_beam,
                                              name=name)
+        
+class DipNetSLPlayerSession(ModelBasedPlayer):
+    """ DipNet SL - NeurIPS 2019 Supervised Learning Benchmark Player """
+
+    def __init__(self, temperature=0.1, use_beam=False, model_dir="", name=None):
+        """ Constructor
+            :param temperature: The temperature to apply to the logits.
+            :param use_beam: Boolean that indicates that we want to use a beam search.
+            :param name: Optional. The name of this player.
+        """
+        # Creating adapter
+        session_dataset = SessionDataset(model_dir=model_dir,
+                                      signature=sl_neurips2019.PolicyAdapter.get_signature(),
+                                      dataset_builder=sl_neurips2019.BaseDatasetBuilder())
+        policy_adapter = sl_neurips2019.PolicyAdapter(session_dataset)
+
+        # Building benchmark model
+        super(DipNetSLPlayerSession, self).__init__(policy_adapter=policy_adapter,
+                                                  temperature=temperature,
+                                                  use_beam=use_beam,
+                                                  name=name)
 
 class DipNetRLPlayer(ModelBasedPlayer):
     """ DipNet RL - NeurIPS 2019 Reinforcement Learning Benchmark Player """

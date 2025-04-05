@@ -141,6 +141,26 @@ python -m diplomacy.server.run
 python diplomacy_research/scripts/launch_bot.py
 ```
 
+### Using the model as an advisor
+
+The bot can also be run in a docker container as a player or an advisor. Before building the image, the model checkpoint should be downloaded from [here](https://drive.google.com/file/d/1P9-VhgpLkCS3u5HMlE7DAt2ofyQe_qqL/view?usp=drive_link) and unzipped in the saved_model folder.
+Docker run flags:
+- --host:       The address of the server hosting diplomacy
+- --port:       The port to connect to on the diplomacy server
+- --game_id:    Game id to join
+- --power:      Bot’s affiliated power
+- --bot_type:   Type of bot, can be either player (DipnetPlayer) or advisor (DipnetAdvisor)
+
+```bash
+# Build docker image
+docker build -t dipnet-bot .
+
+# Example command for running docker container
+docker run -d --name dipnet-bot dipnet-bot --host 0.0.0.0 --port 8433 --game_id diplomacy_game --power GERMANY --bot_type DipnetAdvisor
+```
+
+If the server is hosted on localhost, the flag --network="host" should be used when running the container
+
 ### Trained weights and experiment logs
 
 To facilitate reproducibility, the experiments can be downloaded using the following links. These include hyperparameters, tensorboard graphs, output logs, and weights for each epoch.
