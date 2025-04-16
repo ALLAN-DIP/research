@@ -159,7 +159,9 @@ docker build -t dipnet-bot .
 docker run -d --name dipnet-bot dipnet-bot --host 0.0.0.0 --port 8433 --game_id diplomacy_game --power GERMANY --bot_type DipnetAdvisor
 ```
 
-If the server is hosted on localhost, the flag --network="host" should be used when running the container
+Alternatively, an Amazon Machine Image (AMI) named DipNet-Base containing the built docker image is available, with id ami-06bd8f955168026f9. After launching an instance from the image, the docker container can be similarly run with the above command.
+
+If the server is hosted on localhost, the flag --network="host" should be used when running the container.
 
 ### Trained weights and experiment logs
 
